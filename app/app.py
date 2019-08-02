@@ -1,6 +1,5 @@
 import requests
 
-import settings
 from flask import Flask, Response, request
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -8,7 +7,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
-CORS(app, origins=settings.ALLOWED_ORIGINS)
+CORS(app)
 
 
 GOOGLE_ANALYTICS_HOST = "www.google-analytics.com"
