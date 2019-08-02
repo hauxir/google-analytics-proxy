@@ -1,0 +1,6 @@
+google-analytics-proxy:
+  ports:
+      - "5000:5000"
+  build: .
+  volumes:
+    - ./app:/app
