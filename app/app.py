@@ -18,6 +18,7 @@ GOOGLE_ANALYTICS_ROOT = f"https://{GOOGLE_ANALYTICS_HOST}"
 @app.route("/", methods=["GET"])
 @app.route("/analytics.js", methods=["GET"])
 def root():
+    host = request.host
     headers = dict(request.headers)
     headers["Host"] = GOOGLE_ANALYTICS_HOST
     req = requests.get(
@@ -26,12 +27,13 @@ def root():
         stream=True,
         verify=False,
     )
-    return Response(
-        req.iter_content(chunk_size=10 * 1024),
-        content_type=req.headers.get("content-type"),
-    )
+    content = req.content.decode("utf-8")
+    content = content.replace('/collect"', '/shoebill"')
+    content = content.replace(GOOGLE_ANALYTICS_HOST, host)
+    return Response(content, content_type=req.headers.get("content-type"))
 
 
+@app.route("/shoebill", methods=["GET"])
 @app.route("/collect", methods=["GET"])
 def collect():
     args = dict(request.args)
@@ -52,4 +54,4 @@ def collect():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, threaded=True)
+    app.run(host="0.0.0.0", port=5001, threaded=True)
